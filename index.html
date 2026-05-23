@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>학교 자원 모니터링 시스템</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- 상단 배너 -->
+
+    <section class="hero">
+
+        <img src="school.jpg" alt="학교 이미지">
+
+        <div class="hero-overlay">
+
+            <h1>학교 자원 모니터링 시스템</h1>
+
+            <p>
+                학교의 전기, 수도, 가스 사용량을 실시간으로 분석하여
+                효율적인 자원 관리를 지원하는 플랫폼입니다.
+            </p>
+
+        </div>
+
+    </section>
+
+    <div class="container">
+
+        <!-- 원형 그래프 -->
+
+        <section class="analysis-section">
+
+            <div class="progress-wrapper">
+
+                <div class="progress-card">
+
+                    <div class="progress-title">
+                        전기
+                    </div>
+
+                    <div class="circle blue">
+                        <span>78%</span>
+                    </div>
+
+                </div>
+
+                <div class="progress-card">
+
+                    <div class="progress-title">
+                        수도
+                    </div>
+
+                    <div class="circle green">
+                        <span>91%</span>
+                    </div>
+
+                </div>
+
+                <div class="progress-card">
+
+                    <div class="progress-title">
+                        가스
+                    </div>
+
+                    <div class="circle orange">
+                        <span>85%</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- 카드 -->
+
+        <section class="card-section">
+
+            <div class="card-grid">
+
+                <div class="info-card"
+                     onclick="location.href='electricity.html'">
+
+                    <div class="card-icon blue-icon">⚡</div>
+                    <h3>전기</h3>
+                    <p>실시간 전기 사용량 모니터링</p>
+                    <div class="card-arrow">→</div>
+
+                </div>
+
+                <div class="info-card"
+                     onclick="location.href='water.html'">
+
+                    <div class="card-icon green-icon">💧</div>
+                    <h3>수도</h3>
+                    <p>실시간 수도 사용량 모니터링</p>
+                    <div class="card-arrow">→</div>
+
+                </div>
+
+                <div class="info-card"
+                     onclick="location.href='gas.html'">
+
+                    <div class="card-icon orange-icon">🔥</div>
+                    <h3>가스</h3>
+                    <p>실시간 가스 사용량 모니터링</p>
+                    <div class="card-arrow">→</div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+
+    <!-- 푸터 -->
+    <footer>
+        <p>© 2026 학교 자원 모니터링 시스템. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>

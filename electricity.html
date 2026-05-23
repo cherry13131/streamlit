@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>전기 사용량 모니터링 - 학교 자원 모니터링</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <div class="dashboard-container">
+
+        <div class="page-header">
+            <div>
+                <h1>⚡ 전기 사용량 모니터링</h1>
+                <p>실시간 전기 사용 현황 대시보드</p>
+            </div>
+            <a href="index.html" class="back-btn">← 메인으로</a>
+        </div>
+
+        <div class="top-cards">
+            <div class="card">
+                <div class="icon-box blue"><i class="fas fa-bolt"></i></div>
+                <div class="card-info">
+                    <h3>현재 전기 사용량</h3>
+                    <div class="value blue-text">352 <span>kWh</span></div>
+                    <div class="sub-text blue-text"><i class="fas fa-arrow-up"></i> 오늘 평균보다 12% 높음</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="icon-box teal"><i class="fas fa-chart-line"></i></div>
+                <div class="card-info">
+                    <h3>오늘 누적 사용량</h3>
+                    <div class="value teal-text">2,840 <span>kWh</span></div>
+                    <div class="sub-text gray-text"><span class="dot blue"></span> 전일 대비 -5%</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="icon-box green"><i class="fas fa-leaf"></i></div>
+                <div class="card-info">
+                    <h3>절약 효율</h3>
+                    <div class="value green-text">78 <span>%</span></div>
+                    <div class="sub-text gray-text"><i class="far fa-calendar-check"></i> 이번 주 기준</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-sections">
+            <div class="chart-card">
+                <h3>전기 상태 분석</h3>
+                <div class="donut-container">
+                    <div class="donut-item">
+                        <h4>사용률</h4>
+                        <div class="chart-wrapper">
+                            <canvas id="elecDonut"></canvas>
+                            <div class="center-text">
+                                <strong>78%</strong>
+                                <span>상태 양호</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="line-chart-box">
+                <div class="line-header">
+                    <h3>전기 사용량 추이 <span>(kWh)</span></h3>
+                    <div class="badge"><span class="dot blue"></span> 실시간</div>
+                </div>
+                <div class="canvas-container">
+                    <canvas id="elecLine"></canvas>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>© 2026 학교 자원 모니터링 시스템. All rights reserved.</p>
+    </footer>
+
+    <script>
+        Chart.defaults.font.family = "'Noto Sans KR', sans-serif";
+
+        // 도넛 차트
+        new Chart(document.getElementById('elecDonut').getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                datasets: [{
+                    data: [78, 22],
+                    backgroundColor: ['#239ce3', '#e6f4fc'],
+                    borderWidth: 0,
+                    borderRadius: 10
+                }]
+            },
+            options: {
+                cutout: '80%',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { tooltip: { enabled: false } }
+            }
+        });
+
+        // 라인 차트
+        const ctx = document.getElementById('elecLine').getContext('2d');
+        const gradient = ctx.createLinearGradient(0, 0, 0, 180);
+        gradient.addColorStop(0, 'rgba(35, 156, 227, 0.2)');
+        gradient.addColorStop(1, 'rgba(35, 156, 227, 0)');
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00', '24:00'],
+                datasets: [{
+                    data: [250, 300, 450, 650, 480, 420, 500],
+                    borderColor: '#239ce3',
+                    backgroundColor: gradient,
+                    fill: true,
+                    pointBorderColor: '#239ce3',
+                    pointBackgroundColor: '#fff',
+                    pointBorderWidth: 2,
+                    tension: 0.4,
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { grid: { display: false }, ticks: { color: '#9ca3af', font: { size: 11 } } },
+                    y: { min: 0, max: 700, grid: { color: '#f3f4f6' }, ticks: { color: '#9ca3af', stepSize: 175 } }
+                },
+                elements: { point: { radius: 3 } }
+            }
+        });
+    </script>
+
+</body>
+</html>
