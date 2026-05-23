@@ -5,42 +5,132 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>학교 자원 모니터링 시스템</title>
+
     <link rel="stylesheet" href="style.css">
-    <!-- 차트를 그리기 위한 Chart.js 라이브러리 로드 -->
+
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
+
+    <!-- 헤더 -->
     <header>
         <h1>학교 자원 실시간 모니터링</h1>
         <p>실시간 물 및 전기 사용량 대시보드</p>
     </header>
 
+    <!-- 전체 컨테이너 -->
     <main class="dashboard-container">
-        <!-- 상단 요약 카드 섹션 -->
+
+        <!-- =========================
+             상단 요약 카드
+        ========================== -->
         <section class="summary-cards">
+
             <div class="card">
                 <h3>현재 전기 사용량</h3>
-                <p class="value" id="electricity-val">-- kWh</p>
+
+                <p class="value" id="electricity-val">
+                    352 kWh
+                </p>
+
+                <p class="sub">
+                    오늘 평균보다 12% 높음
+                </p>
             </div>
+
             <div class="card">
                 <h3>현재 수도 사용량</h3>
-                <p class="value" id="water-val">-- L</p>
+
+                <p class="value" id="water-val">
+                    781 L
+                </p>
+
+                <p class="sub">
+                    안정적인 사용량 유지 중
+                </p>
             </div>
+
+            <div class="card">
+                <h3>절약 효율</h3>
+
+                <p class="value">
+                    92%
+                </p>
+
+                <p class="sub">
+                    이번 주 기준
+                </p>
+            </div>
+
         </section>
 
-        <!-- 차트 섹션 -->
+        <!-- =========================
+             원형 그래프 섹션
+        ========================== -->
         <section class="charts-section">
+
+            <!-- 원형 진행률 카드 -->
             <div class="chart-box">
-                <h2>전기 사용량 추이 (실시간)</h2>
+
+                <h2>실시간 상태 분석</h2>
+
+                <div class="progress-wrapper">
+
+                    <!-- 전기 -->
+                    <div class="progress-card">
+
+                        <div class="progress-title">
+                            Electricity
+                        </div>
+
+                        <div class="circle blue">
+                            <span>78%</span>
+                        </div>
+
+                    </div>
+
+                    <!-- 수도 -->
+                    <div class="progress-card">
+
+                        <div class="progress-title">
+                            Water
+                        </div>
+
+                        <div class="circle green">
+                            <span>91%</span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- 전기 차트 -->
+            <div class="chart-box">
+
+                <h2>전기 사용량 추이</h2>
+
                 <canvas id="electricityChart"></canvas>
+
             </div>
+
+            <!-- 수도 차트 -->
             <div class="chart-box">
-                <h2>수도 사용량 추이 (실시간)</h2>
+
+                <h2>수도 사용량 추이</h2>
+
                 <canvas id="waterChart"></canvas>
+
             </div>
+
         </section>
+
     </main>
 
     <script src="app.js"></script>
+
 </body>
 </html>
