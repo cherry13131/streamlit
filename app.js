@@ -1,231 +1,105 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>학주봉 - 학교 자원 모니터링 시스템</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+:root {
+    --bg-color: #f1f5f9;
+    --card-bg: #ffffff;
+    --text-main: #1e293b;
+    --text-sub: #64748b;
 
-    <style>
-        :root {
-            --bg-color: #0f172a;       /* 딥한 다크네이비 배경 */
-            --card-color: #1e293b;     /* 세련된 카드 배경 */
-            --accent-blue: #38bdf8;     /* 전기 포인트 컬러 */
-            --accent-green: #34d399;    /* 수도 포인트 컬러 */
-            --text-main: #f8fafc;
-            --text-sub: #94a3b8;
-            --radius-large: 32px;      /* 이미지 참고한 둥근 모서리 */
-            --radius-small: 16px;
-        }
+    --color-elec: #2299c5;
+    --color-water: #84cc16;
+    --color-gas: #eab308;
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Malgun Gothic', sans-serif; }
-        body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
+    --radius-premium: 40px;
+}
 
-        /* 네비게이션바 (페이지네이션 역할) */
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 40px;
-            background-color: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        .logo { font-size: 24px; font-weight: bold; letter-spacing: 1px; color: var(--accent-blue); }
-        .nav-links { display: flex; gap: 15px; }
-        .nav-btn {
-            background: none; border: none; color: var(--text-sub); font-size: 16px; font-weight: 600;
-            padding: 10px 24px; cursor: pointer; border-radius: var(--radius-small); transition: all 0.3s ease;
-        }
-        .nav-btn.active, .nav-btn:hover {
-            background-color: var(--card-color); color: var(--text-main); box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
 
-        /* 화면 뷰 제어 */
-        .page-view { display: none; padding: 40px; max-width: 1400px; width: 100%; margin: 0 auto; flex-grow: 1; }
-        .page-view.active { display: block; animation: fadeIn 0.4s ease-in-out; }
+.window-wrapper {
+    width: 100%;
+    max-width: 1050px;
+    min-height: 500px;
+    position: relative;
+}
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+.premium-card {
+    background: var(--card-bg);
+    border-radius: var(--radius-premium);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04);
+    display: none;
+    width: 100%;
+    padding: 50px 60px;
+    border: 1px solid rgba(0,0,0,0.02);
+    position: relative;
+    overflow: hidden;
+}
+.premium-card.active { display: flex; animation: slideEffect 0.5s ease-in-out; }
 
-        /* ================= HOME PAGE STYLE ================= */
-        .home-container { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; height: 70vh; }
-        .home-title { font-size: 56px; font-weight: 800; margin-bottom: 15px; background: linear-gradient(to right, #38bdf8, #34d399); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .home-subtitle { font-size: 20px; color: var(--text-sub); margin-bottom: 40px; }
-        .home-grid { display: flex; gap: 30px; width: 100%; max-width: 900px; }
-        .home-card {
-            flex: 1; background-color: var(--card-color); border-radius: var(--radius-large); padding: 40px;
-            cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid rgba(255,255,255,0.03);
-        }
-        .home-card:hover { transform: translateY(-10px); border-color: rgba(255,255,255,0.1); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
-        .home-card i { font-size: 48px; margin-bottom: 20px; }
-        .home-card.elec i { color: var(--accent-blue); }
-        .home-card.water i { color: var(--accent-green); }
-        .home-card h3 { font-size: 24px; margin-bottom: 10px; }
+@keyframes slideEffect {
+    from { opacity: 0; transform: scale(0.98); }
+    to { opacity: 1; transform: scale(1); }
+}
 
-        /* ================= DASHBOARD PAGE STYLE ================= */
-        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 30px; margin-top: 20px; }
-        .chart-card {
-            background-color: var(--card-color); border-radius: var(--radius-large); padding: 35px;
-            border: 1px solid rgba(255,255,255,0.03); display: flex; flex-direction: column; align-items: center;
-        }
-        .chart-card h2 { font-size: 22px; width: 100%; margin-bottom: 25px; display: flex; align-items: center; gap: 10px; }
-        .chart-container { position: relative; width: 100%; max-width: 340px; aspect-ratio: 1; }
+.back-arrow {
+    position: absolute;
+    left: -70px;
+    top: 40px;
+    width: 50px;
+    height: 50px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    transition: all 0.2s;
+}
+.back-arrow:hover { transform: translateX(-3px); background: #f8fafc; }
 
-        /* 실시간 텍스트 수치 레이아웃 */
-        .summary-box { display: flex; gap: 20px; margin-bottom: 30px; width: 100%; }
-        .summary-tile {
-            flex: 1; background-color: var(--card-color); border-radius: var(--radius-small); padding: 25px;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .summary-tile .info h4 { color: var(--text-sub); font-size: 14px; margin-bottom: 5px; }
-        .summary-tile .info p { font-size: 28px; font-weight: bold; }
-    </style>
-</head>
-<body>
+/* 홈 화면 레이아웃 */
+.home-layout { justify-content: space-between; align-items: center; }
+.home-left { flex: 1.2; }
+.home-left .intro-tag { font-size: 28px; color: #475569; font-weight: 300; margin-bottom: -5px; }
+.home-left .intro-tag span { font-style: italic; font-family: Georgia, serif; color: #2299c5; }
+.home-left h1 { font-size: 42px; font-weight: 800; color: var(--text-main); margin-bottom: 15px; letter-spacing: -1px; }
+.home-left p { font-size: 14px; color: var(--text-sub); line-height: 1.6; max-width: 320px; margin-bottom: 35px; }
 
-    <nav>
-        <div class="logo"><i class="fa-solid fa-seedling"></i> HAKJUBONG</div>
-        <div class="nav-links">
-            <button class="nav-btn active" onclick="switchPage('home')">홈 화면</button>
-            <button class="nav-btn" onclick="switchPage('dashboard')">실시간 사용량</button>
-        </div>
-    </nav>
+.action-btn {
+    background-color: #2299c5; color: white; border: none; padding: 12px 35px;
+    border-radius: 25px; font-size: 14px; font-weight: 600; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 15px; transition: all 0.3s;
+}
+.action-btn:hover { background-color: #1d7fa5; transform: translateY(-2px); }
+.action-btn .circle-arrow { width: 22px; height: 22px; background: white; color: #2299c5; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; }
 
-    <div id="page-home" class="page-view active">
-        <div class="home-container">
-            <h1 class="home-title">학교 자원 모니터링 시스템</h1>
-            <p class="home-subtitle">실시간 데이터를 분석하여 교내 에너지 낭비를 방지합니다.</p>
+.deco-text {
+    font-family: Georgia, serif; font-size: 110px; color: #e2e8f0; font-style: italic;
+    position: absolute; left: 45%; transform: rotate(-90px); opacity: 0.5; pointer-events: none;
+}
 
-            <div class="home-grid">
-                <div class="home-card elec" onclick="switchPage('dashboard')">
-                    <i class="fa-solid fa-bolt"></i>
-                    <h3>전기 사용량 조회</h3>
-                    <p style="color: var(--text-sub);">본관, 체육관, 정보관 전력 현황</p>
-                </div>
-                <div class="home-card water" onclick="switchPage('dashboard')">
-                    <i class="fa-solid fa-droplet"></i>
-                    <h3>수도 사용량 조회</h3>
-                    <p style="color: var(--text-sub);">급식실, 각 층 화장실 용수 현황</p>
-                </div>
-            </div>
-        </div>
-    </div>
+.home-right-dots { display: flex; flex-direction: column; gap: 15px; align-items: center; justify-content: center; padding-left: 40px; }
+.dot { width: 18px; height: 18px; border-radius: 50%; }
+.dot.b { background-color: #2299c5; }
+.dot.g { background-color: #cbd5e1; }
+.dot.v { background-color: #84cc16; }
 
-    <div id="page-dashboard" class="page-view">
+/* 대시보드 화면 레이아웃 */
+.dashboard-layout { flex-direction: column; align-items: center; text-align: center; }
+.dashboard-layout h2 { font-size: 22px; font-weight: 700; margin-bottom: 5px; color: #334155; }
+.dashboard-layout .sub-info { font-size: 12px; color: var(--text-sub); font-style: italic; margin-bottom: 40px; }
 
-        <div class="summary-box">
-            <div class="summary-tile" style="border-left: 5px solid var(--accent-blue);">
-                <div class="info">
-                    <h4>전체 전기 사용량</h4>
-                    <p id="txt-total-electricity">1,254 kWh</p>
-                </div>
-                <i class="fa-solid fa-bolt" style="font-size: 32px; color: var(--accent-blue);"></i>
-            </div>
-            <div class="summary-tile" style="border-left: 5px solid var(--accent-green);">
-                <div class="info">
-                    <h4>전체 수도 사용량</h4>
-                    <p id="txt-total-water">480 L</p>
-                </div>
-                <i class="fa-solid fa-droplet" style="font-size: 32px; color: var(--accent-green);"></i>
-            </div>
-        </div>
+.charts-row { display: flex; justify-content: center; gap: 60px; width: 100%; }
+.chart-item { display: flex; flex-direction: column; align-items: center; }
 
-        <div class="dashboard-grid">
-            <div class="chart-card">
-                <h2><i class="fa-solid fa-bolt" style="color:var(--accent-blue)"></i> 전기 사용량 비율</h2>
-                <div class="chart-container">
-                    <canvas id="electricityDoughnutChart"></canvas>
-                </div>
-            </div>
-
-            <div class="chart-card">
-                <h2><i class="fa-solid fa-droplet" style="color:var(--accent-green)"></i> 수도 사용량 비율</h2>
-                <div class="chart-container">
-                    <canvas id="waterDoughnutChart"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // 1. 페이지 전환 (페이지네이션 기능) 함수
-        function switchPage(pageId) {
-            // 모든 뷰 숨기기
-            document.getElementById('page-home').classList.remove('active');
-            document.getElementById('page-dashboard').classList.remove('active');
-
-            // 모든 버튼 비활성화
-            const buttons = document.querySelectorAll('.nav-btn');
-            buttons.forEach(btn => btn.classList.remove('active'));
-
-            // 선택한 뷰 및 버튼 활성화
-            if(pageId === 'home') {
-                document.getElementById('page-home').classList.add('active');
-                buttons[0].classList.add('active');
-            } else if(pageId === 'dashboard') {
-                document.getElementById('page-dashboard').classList.add('active');
-                buttons[1].classList.add('active');
-            }
-        }
-
-        // =========================================================
-        // 2. 실질적인 데이터 입력 공간 (Chart.js 설정)
-        // =========================================================
-
-        // --- 전기 데이터 설정 ---
-        const ctxElec = document.getElementById('electricityDoughnutChart').getContext('2d');
-        const elecChart = new Chart(ctxElec, {
-            type: 'doughnut',
-            data: {
-                // ★ DATA INPUT HERE ★ : 전기 차트 항목 이름
-                labels: ['본관', '체육관', '정보관'],
-                datasets: [{
-                    // ★ DATA INPUT HERE ★ : 전기 실제 수치값 입력 데이터
-                    data: [650, 354, 250],
-                    backgroundColor: ['#38bdf8', '#0284c7', '#bae6fd'], // 도넛 영역별 색상 순서
-                    borderWidth: 0,
-                    hoverOffset: 10
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 14 } } }
-                }
-            }
-        });
-
-        // --- 수도 데이터 설정 ---
-        const ctxWater = document.getElementById('waterDoughnutChart').getContext('2d');
-        const waterChart = new Chart(ctxWater, {
-            type: 'doughnut',
-            data: {
-                // ★ DATA INPUT HERE ★ : 수도 차트 항목 이름
-                labels: ['급식실', '본관 화장실', '강당'],
-                datasets: [{
-                    // ★ DATA INPUT HERE ★ : 수도 실제 수치값 입력 데이터
-                    data: [240, 160, 80],
-                    backgroundColor: ['#34d399', '#059669', '#a7f3d0'], // 도넛 영역별 색상 순서
-                    borderWidth: 0,
-                    hoverOffset: 10
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 14 } } }
-                }
-            }
-        });
-    </script>
-</body>
-</html>
+.ring-graph {
+    width: 140px; height: 140px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    position: relative; margin-bottom: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+}
+.ring-graph::after {
+    content: ''; position: absolute; width: 112px; height: 112px;
+    background: white; border-radius: 50%; z-index: 1;
+}
+.ring-value { position: relative; z-index: 2; font-size: 22px; font-weight: 700; color: #334155; letter-spacing: -0.5px; }
+.chart-item label { font-size: 15px; font-weight: 600; color: #475569; }
