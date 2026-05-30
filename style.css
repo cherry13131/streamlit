@@ -58,6 +58,7 @@ body {
     position: absolute;
     inset: 0;
     pointer-events: none;
+    z-index: 0;
 }
 
 .hero-svg {
@@ -116,9 +117,8 @@ body {
 }
 
 @keyframes drawPath {
-    0% { stroke-dashoffset: 1; opacity: 0.3; }
-    50% { stroke-dashoffset: 0.5; opacity: 0.6; }
-    100% { stroke-dashoffset: 0; opacity: 0.3; }
+    0% { stroke-dashoffset: var(--path-length); }
+    100% { stroke-dashoffset: 0; }
 }
 
 .hero-btn-container {
@@ -292,105 +292,154 @@ body {
 }
 
 /* ===================================
-   카드 섹션
+   상세 모니터링 기능 섹션 (FeatureGrid 스타일)
    =================================== */
-.card-section {
-    margin-bottom: 48px;
+.feature-section {
+    width: 100%;
+    padding: 48px 0;
 }
 
-.card-grid {
+.feature-header {
+    max-width: 768px;
+    margin: 0 auto 48px auto;
+    text-align: center;
+    padding: 0 24px;
+}
+
+.feature-header h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: -0.05em;
+    color: var(--text-main);
+    line-height: 1.2;
+}
+
+.feature-header p {
+    margin-top: 16px;
+    font-size: 1.125rem;
+    color: var(--text-sub);
+}
+
+.feature-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: 1fr;
     gap: 32px;
+    padding: 0 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 0;
 }
 
-.info-card {
-    background-color: var(--card-bg);
-    border-radius: var(--border-radius);
-    padding: 36px 28px;
-    box-shadow: var(--shadow);
-    cursor: pointer;
-    transition: var(--transition);
+/* 마우스 추적 푸른빛 후광 효과 (단일 효과로 겹치거나 잘림 없음) */
+.feature-grid::before {
+    content: "";
+    position: absolute;
+    top: -200px;
+    left: -200px;
+    right: -200px;
+    bottom: -200px;
+    background: radial-gradient(
+        500px circle at calc(var(--mouse-x, 0px) + 200px) calc(var(--mouse-y, 0px) + 200px),
+        rgba(59, 130, 246, 0.1), /* 파란색 후광 투명도 10%로 대폭 낮춤 */
+        transparent 70%
+    );
+    pointer-events: none;
+    z-index: -1; /* 모든 카드 뒤에 단일로 깔림 */
+}
+
+@media (min-width: 768px) {
+    .feature-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 1024px) {
+    .feature-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+.feature-card {
     position: relative;
-    overflow: hidden;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 12px;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 24px;
+    border-radius: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    background-color: rgba(255, 255, 255, 0.5); /* 기본 50% 반투명 흰색 */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    z-index: 1;
 }
 
-.info-card::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 4px;
-    background: linear-gradient(90deg, var(--blue), var(--teal));
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+.feature-card:hover {
+    transform: scale(1.05);
+    border-color: rgba(255, 255, 255, 1);
+    background-color: rgba(255, 255, 255, 0.8); /* 마우스 올리면 투명도 80% */
 }
 
-.info-card:hover::after {
-    transform: scaleX(1);
+/* 내부 요소들이 확실히 위로 오도록 */
+.feature-card > * {
+    position: relative;
+    z-index: 2;
 }
 
-.info-card:hover {
-    box-shadow: var(--shadow-hover);
-    transform: translateY(-6px);
+/* 다크모드 대응(만약 프로젝트에 다크모드가 있다면) */
+@media (prefers-color-scheme: dark) {
+    .feature-card {
+        border-color: rgba(255, 255, 255, 0.2);
+        background-color: rgba(255, 255, 255, 0.12);
+    }
+    .feature-card:hover {
+        border-color: rgba(255, 255, 255, 0.35);
+        background-color: rgba(255, 255, 255, 0.2);
+    }
 }
 
-.info-card:active {
-    transform: translateY(-2px);
-}
-
-.card-icon {
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
+.feature-icon-wrapper {
     display: flex;
-    justify-content: center;
+    height: 48px;
+    width: 48px;
     align-items: center;
-    font-size: 28px;
-    margin-bottom: 4px;
-}
-
-.card-icon.blue-icon {
-    background-color: var(--blue-light);
-}
-
-.card-icon.green-icon {
-    background-color: var(--green-light);
-}
-
-.card-icon.orange-icon {
-    background-color: var(--orange-light);
-}
-
-.info-card h3 {
-    font-size: 22px;
-    font-weight: 700;
+    justify-content: center;
+    border-radius: 0.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    background-color: var(--card-bg);
     color: var(--text-main);
+    font-size: 24px;
 }
 
-.info-card p {
-    font-size: 14px;
+@media (prefers-color-scheme: dark) {
+    .feature-icon-wrapper {
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+}
+
+.feature-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+}
+
+.feature-text h3 {
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.025em;
+    color: var(--text-main);
+    margin-bottom: 8px;
+}
+
+.feature-text p {
+    font-size: 0.875rem;
     color: var(--text-sub);
     line-height: 1.5;
-}
-
-.card-arrow {
-    font-size: 20px;
-    color: var(--text-sub);
-    margin-top: 8px;
-    transition: var(--transition);
-}
-
-.info-card:hover .card-arrow {
-    color: var(--blue);
-    transform: translateX(6px);
+    margin: 0;
 }
 
 /* ===================================

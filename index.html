@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>에너지 대시보드</title>
 
-    <link rel="stylesheet" href="style.css?v=2">
+    <link rel="stylesheet" href="style.css?v=20">
 </head>
 
 <body>
@@ -165,44 +165,35 @@
             </div>
         </section>
 
-        <!-- 카드 -->
-
-        <section class="card-section">
-
-            <div class="card-grid">
-
-                <div class="info-card"
-                     onclick="location.href='electricity.html'">
-
-                    <div class="card-icon blue-icon">⚡</div>
-                    <h3>전기</h3>
-                    <p>실시간 전기 사용량 모니터링</p>
-                    <div class="card-arrow">→</div>
-
-                </div>
-
-                <div class="info-card"
-                     onclick="location.href='water.html'">
-
-                    <div class="card-icon green-icon">💧</div>
-                    <h3>수도</h3>
-                    <p>실시간 수도 사용량 모니터링</p>
-                    <div class="card-arrow">→</div>
-
-                </div>
-
-                <div class="info-card"
-                     onclick="location.href='gas.html'">
-
-                    <div class="card-icon orange-icon">🔥</div>
-                    <h3>가스</h3>
-                    <p>실시간 가스 사용량 모니터링</p>
-                    <div class="card-arrow">→</div>
-
-                </div>
-
+        <!-- 기능 카드 섹션 (FeatureGrid 스타일) -->
+        <section class="feature-section">
+            <div class="feature-header">
+                <h2>상세 모니터링</h2>
+                <p>학교 핵심 자원의 실시간 사용 현황을 개별적으로 확인하세요.</p>
             </div>
-
+            <div class="feature-grid">
+                <div class="feature-card" onclick="location.href='electricity.html'">
+                    <div class="feature-icon-wrapper">⚡</div>
+                    <div class="feature-text">
+                        <h3>전기</h3>
+                        <p>실시간 전기 사용량 모니터링</p>
+                    </div>
+                </div>
+                <div class="feature-card" onclick="location.href='water.html'">
+                    <div class="feature-icon-wrapper">💧</div>
+                    <div class="feature-text">
+                        <h3>수도</h3>
+                        <p>실시간 수도 사용량 모니터링</p>
+                    </div>
+                </div>
+                <div class="feature-card" onclick="location.href='gas.html'">
+                    <div class="feature-icon-wrapper">🔥</div>
+                    <div class="feature-text">
+                        <h3>가스</h3>
+                        <p>실시간 가스 사용량 모니터링</p>
+                    </div>
+                </div>
+            </div>
         </section>
 
     </div>
@@ -221,14 +212,17 @@
                 svg.setAttribute("fill", "none");
                 svg.classList.add("hero-svg");
                 
-                for (let i = 0; i < 36; i++) {
+                for (let i = 0; i < 25; i++) {
+                    const idx = i * 1.4; // 선 간격을 적절히 조절
                     const path = document.createElementNS(svgNS, "path");
-                    const d = `M-${380 - i * 5 * position} -${189 + i * 6}C-${380 - i * 5 * position} -${189 + i * 6} -${312 - i * 5 * position} ${216 - i * 6} ${152 - i * 5 * position} ${343 - i * 6}C${616 - i * 5 * position} ${470 - i * 6} ${684 - i * 5 * position} ${875 - i * 6} ${684 - i * 5 * position} ${875 - i * 6}`;
+                    const d = `M-${380 - idx * 5 * position} -${189 + idx * 6}C-${380 - idx * 5 * position} -${189 + idx * 6} -${312 - idx * 5 * position} ${216 - idx * 6} ${152 - idx * 5 * position} ${343 - idx * 6}C${616 - idx * 5 * position} ${470 - idx * 6} ${684 - idx * 5 * position} ${875 - idx * 6} ${684 - idx * 5 * position} ${875 - idx * 6}`;
                     
                     path.setAttribute("d", d);
                     path.setAttribute("stroke", "currentColor");
-                    path.setAttribute("stroke-width", 0.5 + i * 0.03);
-                    path.setAttribute("stroke-opacity", 0.1 + i * 0.03);
+                    path.setAttribute("stroke-width", 0.5 + idx * 0.03);
+                    // 밑에 깔리는 선(i가 작음)일수록 진하게(0.37), 
+                    // 위에 덮이는 바깥쪽 선(i가 큼)일수록 연하게(0.02) 처리
+                    path.setAttribute("stroke-opacity", 0.02 + Math.pow((24 - i) / 24, 2) * 0.35);
                     svg.appendChild(path);
                 }
                 return svg;
@@ -241,11 +235,12 @@
 
                 const paths = container.querySelectorAll("path");
                 paths.forEach(path => {
-                    path.setAttribute("pathLength", "1");
-                    path.style.strokeDasharray = "0.3 0.7";
+                    const length = path.getTotalLength() || 1500;
+                    path.style.setProperty('--path-length', length);
+                    path.style.strokeDasharray = `${length * 0.3} ${length * 0.7}`;
+                    
                     const duration = 20 + Math.random() * 10;
                     path.style.animation = `drawPath ${duration}s linear infinite`;
-                    path.style.willChange = "stroke-dashoffset, opacity";
                 });
             }
 
@@ -277,6 +272,18 @@
                         });
                     });
                     titleContainer.appendChild(wordSpan);
+                });
+            }
+
+            // 그리드 전체 마우스 추적 (배경 후광 효과용)
+            const featureGrid = document.querySelector(".feature-grid");
+            if (featureGrid) {
+                document.addEventListener("mousemove", e => {
+                    const rect = featureGrid.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    featureGrid.style.setProperty("--mouse-x", `${x}px`);
+                    featureGrid.style.setProperty("--mouse-y", `${y}px`);
                 });
             }
         });
