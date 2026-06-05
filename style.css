@@ -29,7 +29,1015 @@ body {
     flex-direction: column;
 }
 
-/* 전역 배경 애니메이션 (#hero-bg) */
+/* 전역 배경 애니메이션 (#hero-bg) *//* ===================================
+   학교 자원 모니터링 시스템 - 스타일시트
+   이전 대시보드 디자인 시스템 통합
+   =================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+
+/* --- Design Tokens (이전 대시보드 기반) --- */
+:root {
+    --bg-color: #f7f9fc;
+    --card-bg: #ffffff;
+    --text-main: #1a2332;
+    --text-sub: #7a869a;
+    --blue: #239ce3;
+    --blue-light: #e6f4fc;
+    --green: #7dc242;
+    --green-light: #eff7e9;
+    --teal: #36b0a1;
+    --teal-light: #e7f6f5;
+    --orange: #f59e0b;
+    --orange-light: #fef3c7;
+    --border-radius: 16px;
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    --shadow-hover: 0 8px 32px rgba(0, 0, 0, 0.08);
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* --- Reset & Base --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ===================================
+   히어로 배너
+   =================================== */
+.hero-new {
+    position: relative;
+    min-height: calc(100vh - 32px);
+    width: calc(100% - 32px);
+    margin: 16px;
+    border-radius: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* 중앙 정렬 해제하고 왼쪽으로 완전히 밀착 */
+    overflow: hidden; /* 모서리 둥글게 자르기 */
+}
+
+.hero-bg {
+    position: fixed; /* absolute에서 fixed로 변경하여 스크롤 시에도 배경 유지 */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.hero-svg {
+    width: 100%;
+    height: 100%;
+    color: #020617;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 10;
+    text-align: left; /* 왼쪽 정렬 */
+    padding: 0;
+    max-width: 800px;
+    margin-left: 8vw; /* 화면 왼쪽에서 적절히 띄움 (기존보다 훨씬 왼쪽) */
+}
+
+/* 오른쪽 배경 이미지 - 보내주신 이미지와 완벽하게 일치하는 비대칭 물방울 모양 */
+.hero-image-halfcircle {
+    position: absolute;
+    right: -5vw; 
+    top: 55%; 
+    width: 65vw; 
+    height: 38vw; 
+    /* 
+       [곡률 수정: 끝부분 부드럽게 라운딩]
+       - 이전 설정은 끝부분이 바늘처럼 너무 뾰족하게 만나는 구조였습니다.
+       - 가로 곡률을 70%로 낮추어(기존 85%), 왼쪽 끝이 뾰족하지 않고 신발 앞코나 조약돌처럼 부드럽고 둥글게(Round) 감싸지도록 조절했습니다.
+       - 여전히 가로/세로 합은 100%로 완벽하게 맞물리므로, 네모난 왜곡 없이 가장 아름다운 곡선이 나옵니다.
+    */
+    border-radius: 70% 30% 30% 70% / 70% 50% 50% 30%; 
+    /* 살짝 위로 들린 각도 유지 (-10도) */
+    transform: translateY(-50%) rotate(-10deg);
+    overflow: hidden; 
+    z-index: 1; 
+}
+
+/* 타원이 회전해도 사진은 똑바로 보이게 유지 */
+.hero-image-halfcircle::before {
+    content: '';
+    position: absolute;
+    /* 사진 영역을 130%로 줄여서 사진이 덜 확대되어 보이게 수정 */
+    top: -15%;
+    left: -15%;
+    width: 130%;
+    height: 130%;
+    background-image: url('school.jpg');
+    background-size: cover;
+    background-position: center;
+    /* 부모의 회전(-10도)을 상쇄 */
+    transform: rotate(10deg);
+}
+
+.hero-new h1 {
+    font-size: 5rem;
+    font-weight: 800;
+    margin-bottom: 2rem;
+    letter-spacing: -0.05em;
+    display: flex;
+    justify-content: flex-start; /* 왼쪽 정렬 */
+    flex-wrap: wrap;
+}
+
+.title-word {
+    display: inline-block;
+}
+
+.title-letter {
+    display: inline-block;
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+    background-image: linear-gradient(to right, #171717, rgba(64, 64, 64, 0.8));
+    opacity: 0; /* Animation handles the rest */
+}
+
+.hero-desc {
+    font-size: 1.125rem;
+    color: #4b5563;
+    line-height: 1.8;
+    margin-bottom: 3rem;
+    animation: fadeInUp 2s ease-out forwards;
+    opacity: 0;
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes drawPath {
+    0% { stroke-dashoffset: var(--path-length); }
+    100% { stroke-dashoffset: 0; }
+}
+
+.hero-btn-container {
+    display: inline-block;
+    position: relative;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.05), rgba(255,255,255,0.05));
+    padding: 1px;
+    border-radius: 1.5rem;
+    backdrop-filter: blur(16px);
+    overflow: hidden;
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+    animation: fadeInUp 2.5s ease-out forwards;
+    opacity: 0;
+}
+
+.hero-btn {
+    border-radius: 1.45rem;
+    padding: 24px 32px;
+    font-size: 1.125rem;
+    font-weight: 600;
+    background-color: rgba(255,255,255,0.95);
+    color: #000;
+    border: 1px solid rgba(0,0,0,0.1);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s;
+}
+
+.hero-btn:hover {
+    background-color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+}
+
+.hero-btn .btn-text {
+    opacity: 0.9;
+    transition: opacity 0.3s;
+}
+
+.hero-btn:hover .btn-text {
+    opacity: 1;
+}
+
+.hero-btn .btn-arrow {
+    margin-left: 12px;
+    opacity: 0.7;
+    transition: all 0.3s;
+}
+
+.hero-btn:hover .btn-arrow {
+    opacity: 1;
+    transform: translateX(6px);
+}
+
+/* 버튼 스타일 */
+.btn-primary {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    padding: 14px 28px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 12px;
+    cursor: pointer;
+    margin-top: 24px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(16, 185, 129, 0.2);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(16, 185, 129, 0.3);
+}
+
+
+/* ===================================
+   컨테이너
+   =================================== */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 48px 24px;
+    position: relative;
+    z-index: 1;
+}
+
+/* ===================================
+   원형 프로그레스 차트 섹션
+   =================================== */
+.analysis-section {
+    margin-bottom: 48px;
+}
+
+.progress-wrapper {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+}
+
+.progress-card {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: var(--border-radius);
+    padding: 40px 24px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    transition: var(--transition);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(4px); /* 아주 살짝의 블러만 적용 */
+    -webkit-backdrop-filter: blur(4px);
+}
+
+.progress-card:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-4px);
+    background-color: rgba(255, 255, 255, 0.4);
+}
+
+.progress-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-main);
+    letter-spacing: -0.3px;
+}
+
+/* --- 원형 프로그레스 (conic-gradient) --- */
+.circle {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: var(--transition);
+}
+
+.circle::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    -webkit-mask: radial-gradient(transparent 55%, black 56%);
+    mask: radial-gradient(transparent 55%, black 56%);
+    z-index: 1;
+}
+
+.circle span {
+    position: relative;
+    z-index: 2;
+    font-size: 32px;
+    font-weight: 700;
+}
+
+/* 전기 - 78% (파란색) */
+.circle.blue::before {
+    background: conic-gradient(
+        var(--blue) 0deg,
+        var(--blue) 280.8deg,     /* 360 × 0.78 */
+        var(--blue-light) 280.8deg,
+        var(--blue-light) 360deg
+    );
+}
+
+.circle.blue span {
+    color: var(--blue);
+}
+
+/* 수도 - 91% (초록색) */
+.circle.green::before {
+    background: conic-gradient(
+        var(--green) 0deg,
+        var(--green) 327.6deg,    /* 360 × 0.91 */
+        var(--green-light) 327.6deg,
+        var(--green-light) 360deg
+    );
+}
+
+.circle.green span {
+    color: var(--green);
+}
+
+/* 가스 - 85% (주황색) */
+.circle.orange::before {
+    background: conic-gradient(
+        var(--orange) 0deg,
+        var(--orange) 306deg,     /* 360 × 0.85 */
+        var(--orange-light) 306deg,
+        var(--orange-light) 360deg
+    );
+}
+
+.circle.orange span {
+    color: var(--orange);
+}
+
+/* ===================================
+   상세 모니터링 기능 섹션 (FeatureGrid 스타일)
+   =================================== */
+.feature-section {
+    width: 100%;
+    padding: 48px 0;
+}
+
+.feature-header {
+    max-width: 768px;
+    margin: 0 auto 48px auto;
+    text-align: center;
+    padding: 0 24px;
+}
+
+.feature-header h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: -0.05em;
+    color: var(--text-main);
+    line-height: 1.2;
+}
+
+.feature-header p {
+    margin-top: 16px;
+    font-size: 1.125rem;
+    color: var(--text-sub);
+}
+
+.feature-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+    position: relative;
+    z-index: 0;
+}
+
+@media (min-width: 768px) {
+    .feature-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 1024px) {
+    .feature-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+.feature-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 24px;
+    border-radius: var(--border-radius);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    background-color: rgba(255, 255, 255, 0.2);
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    transition: var(--transition);
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    z-index: 1;
+}
+
+.feature-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
+    background-color: rgba(255, 255, 255, 0.4);
+}
+
+/* 내부 요소들이 확실히 위로 오도록 */
+.feature-card > * {
+    position: relative;
+    z-index: 2;
+}
+
+/* 다크모드 대응(만약 프로젝트에 다크모드가 있다면) */
+@media (prefers-color-scheme: dark) {
+    .feature-card {
+        border-color: rgba(255, 255, 255, 0.2);
+        background-color: rgba(255, 255, 255, 0.12);
+    }
+    .feature-card:hover {
+        border-color: rgba(255, 255, 255, 0.35);
+        background-color: rgba(255, 255, 255, 0.2);
+    }
+}
+
+.feature-icon-wrapper {
+    display: flex;
+    height: 48px;
+    width: 48px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    background-color: var(--card-bg);
+    color: var(--text-main);
+    font-size: 24px;
+}
+
+@media (prefers-color-scheme: dark) {
+    .feature-icon-wrapper {
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+}
+
+.feature-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+}
+
+.feature-text h3 {
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.025em;
+    color: var(--text-main);
+    margin-bottom: 8px;
+}
+
+.feature-text p {
+    font-size: 0.875rem;
+    color: var(--text-sub);
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* ===================================
+   대시보드 페이지 공통 (서브페이지)
+   =================================== */
+.dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 24px;
+}
+
+.page-header {
+    margin-bottom: 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.page-header h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.page-header p {
+    font-size: 16px;
+    color: var(--text-sub);
+}
+
+.back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 12px;
+    background-color: var(--card-bg);
+    color: var(--text-main);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
+.back-btn:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-2px);
+}
+
+/* 상단 요약 카드 (대시보드) */
+.top-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-bottom: 24px;
+}
+
+.card {
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius);
+    padding: 24px;
+    box-shadow: var(--shadow);
+    display: flex;
+    align-items: center;
+    transition: var(--transition);
+}
+
+.card:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-2px);
+}
+
+.icon-box {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    margin-right: 20px;
+    flex-shrink: 0;
+}
+
+.icon-box.blue { background-color: var(--blue-light); color: var(--blue); }
+.icon-box.green { background-color: var(--green-light); color: var(--green); }
+.icon-box.teal { background-color: var(--teal-light); color: var(--teal); }
+.icon-box.orange { background-color: var(--orange-light); color: var(--orange); }
+
+.card-info h3 {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: var(--text-sub);
+}
+
+.card-info .value {
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 10px;
+}
+
+.card-info .value span {
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.value.blue-text { color: var(--blue); }
+.value.green-text { color: var(--green); }
+.value.teal-text { color: var(--teal); }
+.value.orange-text { color: var(--orange); }
+
+.card-info .sub-text {
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.sub-text.blue-text { color: var(--blue); }
+.sub-text.green-text { color: var(--green); }
+.sub-text.orange-text { color: var(--orange); }
+.sub-text.gray-text { color: var(--text-sub); }
+
+.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.dot.green { background-color: var(--green); }
+.dot.blue { background-color: var(--blue); }
+.dot.orange { background-color: var(--orange); }
+
+/* 차트 영역 */
+.bottom-sections {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 24px;
+}
+
+.chart-card {
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius);
+    padding: 24px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+}
+
+.chart-card h3 {
+    font-size: 18px;
+    margin-bottom: 30px;
+}
+
+/* 도넛 차트 */
+.donut-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex: 1;
+}
+
+.donut-item {
+    text-align: center;
+    position: relative;
+}
+
+.donut-item h4 {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+
+.chart-wrapper {
+    position: relative;
+    width: 160px;
+    height: 160px;
+    margin: 0 auto;
+}
+
+.center-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    pointer-events: none;
+}
+
+.center-text strong {
+    font-size: 28px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.center-text span {
+    font-size: 12px;
+    color: var(--text-sub);
+    margin-top: 4px;
+}
+
+/* 라인 차트 */
+.line-charts {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.line-chart-box {
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius);
+    padding: 24px;
+    box-shadow: var(--shadow);
+    position: relative;
+}
+
+.line-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.line-header h3 {
+    font-size: 16px;
+    margin: 0;
+}
+
+.line-header h3 span {
+    font-size: 12px;
+    color: var(--text-sub);
+    font-weight: 400;
+}
+
+.badge {
+    background-color: #f3f4f6;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.canvas-container {
+    height: 180px;
+    width: 100%;
+}
+
+/* 단일 차트 (전체 너비) */
+.full-chart {
+    grid-template-columns: 1fr;
+}
+
+.full-chart .chart-card {
+    min-height: 300px;
+}
+
+/* ===================================
+   푸터
+   =================================== */
+footer {
+    background-color: #1a2332;
+    color: rgba(255, 255, 255, 0.6);
+    text-align: center;
+    padding: 24px;
+    font-size: 13px;
+}
+
+/* ===================================
+   반응형 디자인
+   =================================== */
+@media (max-width: 992px) {
+    .hero-overlay h1 {
+        font-size: 36px;
+    }
+
+    .progress-wrapper,
+    .card-grid,
+    .top-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .bottom-sections {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .hero {
+        height: 300px;
+    }
+
+    .hero-overlay h1 {
+        font-size: 28px;
+    }
+
+    .hero-overlay p {
+        font-size: 15px;
+    }
+
+    .progress-wrapper,
+    .card-grid,
+    .top-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .container,
+    .dashboard-container {
+        padding: 24px 16px;
+    }
+}
+/* ==========================
+   에코 트리 섹션 (2단 레이아웃)
+========================== */
+
+.eco-tree-section {
+    margin-bottom: 80px;
+    animation: fadeIn 0.8s ease-out;
+}
+
+.eco-tree-layout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 80px;
+    background: #ffffff;
+    padding: 60px 80px;
+    border-radius: 24px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.03);
+    max-width: 100%;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* 왼쪽 텍스트 영역 */
+.eco-tree-text-area {
+    width: 420px;
+    flex-shrink: 0;
+}
+
+.eco-tree-text-area h2 {
+    font-size: 2.8rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 24px;
+    line-height: 1.3;
+}
+
+.eco-tree-text-area .description {
+    font-size: 1.15rem;
+    color: #64748b;
+    line-height: 1.7;
+    margin-bottom: 40px;
+}
+
+/* 통계 텍스트 박스 */
+.eco-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.stat-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.stat-label {
+    font-size: 1.05rem;
+    color: #475569;
+    font-weight: 600;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+}
+
+.highlight-yellow {
+    color: #d97706;
+}
+
+.highlight-green {
+    color: #16a34a;
+}
+
+/* 오른쪽 그래프 영역 */
+.eco-tree-graphic-area {
+    width: 420px;
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#single-tree-svg {
+    width: 100%;
+    max-width: 420px;
+    margin: 0 auto;
+    height: auto;
+    display: block;
+}
+
+.tree-text-num {
+    font-size: 2.2rem;
+    font-weight: 800;
+    fill: #ffffff;
+    text-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
+
+.tree-text-desc {
+    font-size: 1.1rem;
+    font-weight: 700;
+    fill: #f0fdf4;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.4);
+}
+
+/* 액체 물결 애니메이션 */
+.wave-container {
+    transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.wave-path {
+    transform-origin: center center;
+}
+
+.wave-back {
+    animation: waveFlowBack 3s linear infinite;
+}
+
+.wave-front {
+    animation: waveFlowFront 2s linear infinite;
+}
+
+@keyframes waveFlowBack {
+    0% { transform: translateX(-350px); }
+    100% { transform: translateX(0); }
+}
+
+@keyframes waveFlowFront {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-350px); }
+}
+
+/* 일반 페이드인 효과 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ==========================
+   모바일
+========================== */
+
+@media(max-width:992px){
+    .eco-tree-layout {
+        flex-direction: column;
+        padding: 40px;
+        text-align: center;
+    }
+    
+    .eco-tree-text-area h2 {
+        font-size: 2.2rem;
+    }
+    
+    .eco-tree-text-area {
+        max-width: 100%;
+    }
+}
+
+@media(max-width:768px){
+    .hero-new h1 {
+        font-size: 3rem;
+    }
+
+    .hero-desc {
+        font-size: 0.95rem;
+    }
+
+    .progress-wrapper{
+        gap:60px;
+    }
+
+    .card-grid{
+        grid-template-columns:1fr;
+    }
+
+    .container{
+        padding:20px;
+    }
+
+    .eco-tree-layout {
+        padding: 30px 20px;
+    }
+    
+    .stat-box {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .tree-text-num {
+        font-size: 3rem;
+    }
+}
 .hero-bg {
     position: fixed;
     top: 0;
