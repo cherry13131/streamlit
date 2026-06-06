@@ -989,31 +989,27 @@ footer {
 }
 
 /* ===================================
-   태블릿(패드) 및 모바일(폰) 완벽 대응 코드 (최종본)
+   이미지 형태 보존 & 줄바꿈 완벽 해결 최종본
    =================================== */
 
-/* 1. 패드 가로 화면 대응 (1024px 이하) */
-@media (max-width: 1024px) {
+/* 데스크톱/태블릿 공통: 단어 중간에 글자가 찢어지지 않도록 강제 방어 */
+.hero-desc {
+    word-break: keep-all;
+}
+
+/* 1. 패드 가로 화면 대응 (1200px 이하) - 겹침 철벽 방어 */
+@media (max-width: 1200px) {
     .hero-content {
-        /* 텍스트가 화면의 45%만 차지하도록 제한 */
-        max-width: 45%; 
+        max-width: 50%; /* 글씨가 화면 절반을 넘어 이미지와 겹치는 것을 원천 차단 */
         margin-left: 5vw;
     }
     
     .hero-new h1 {
-        font-size: 2.8rem; /* 글씨 크기를 패드에 맞게 더 줄임 */
-        line-height: 1.25;
-    }
-
-    .hero-image-halfcircle {
-        /* 겹침의 주범이었던 이미지 크기를 확 줄임 */
-        width: 50vw; 
-        height: 35vw;
-        right: -2vw; /* 이미지를 오른쪽으로 더 밀어냄 */
+        font-size: 3.5rem; 
     }
 }
 
-/* 2. 패드 세로 화면 & 핸드폰 대응 (900px 이하 - 아이패드 에어/프로 모두 포함) */
+/* 2. 패드 세로 화면 & 핸드폰 대응 (900px 이하) */
 @media (max-width: 900px) {
     .hero-new {
         flex-direction: column;
@@ -1029,46 +1025,55 @@ footer {
     }
 
     .hero-new h1 {
-        font-size: 2.5rem; 
+        font-size: 2.6rem; 
         justify-content: center;
-        display: block; 
     }
 
     /* 자바스크립트로 쪼개진 단어 통째로 고정 */
     .title-word {
         display: inline-block;
         white-space: nowrap; 
-        word-break: keep-all; 
     }
 
+    /* 🔥 핵심 1: HTML에 적힌 <br> 태그를 모바일에서는 무시! 
+       이상한 곳에서 강제로 줄이 바뀌는 현상을 싹 없애고 화면에 맞춰 단어 단위로 예쁘게 넘김 */
+    .hero-desc br {
+        display: none; 
+    }
+    
     .hero-desc {
-        font-size: 1rem;
-        word-break: keep-all; 
+        font-size: 1.05rem;
+        padding: 0 10px;
     }
 
-    /* 모바일 이미지 배치 최적화 */
+    /* 🔥 핵심 2: 못생긴 네모 말고 원래의 예쁜 물방울 모양을 살림 */
     .hero-image-halfcircle {
         position: relative;
         right: auto;
         top: auto;
-        width: 100%;
-        height: 250px;
-        transform: none;
-        border-radius: 24px;
-        margin-top: 24px;
+        width: 80vw; /* 모바일에 꽉 차지 않게 적당한 크기 */
+        height: 60vw;
+        margin: 40px auto 0; /* 텍스트 아래에 가운데 정렬 */
+        /* 데스크톱의 둥근 물결 곡률 그대로 유지! */
+        border-radius: 70% 30% 30% 70% / 70% 50% 50% 30%; 
+        transform: rotate(-10deg); /* 살짝 기울어진 엣지 유지 */
     }
 
+    /* 안쪽 이미지가 찌그러지지 않게 똑바로 펴주기 */
     .hero-image-halfcircle::before {
-        transform: none;
-        top: 0; left: 0; width: 100%; height: 100%;
+        top: -15%; left: -15%; 
+        width: 120%; height: 130%;
+        transform: rotate(10deg); 
     }
 
+    /* 모바일 버튼 크기 조절 */
     .btn-primary {
         height: auto;
         padding: 16px 24px;
         font-size: 1.15rem;
     }
 
+    /* 아래쪽 카드 1줄 정렬 */
     .feature-grid, .top-cards {
         grid-template-columns: 1fr;
         gap: 16px;
