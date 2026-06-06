@@ -989,7 +989,7 @@ footer {
 }
 
 /* ===================================
-   패드 여백 압축 & 폰 이미지 제거 및 중앙 정렬 (최종)
+   에러 수정: 패드 겹침 방지 & 폰 나무 그래프 잘림 방지
    =================================== */
 
 .hero-desc {
@@ -1003,39 +1003,36 @@ footer {
         margin-left: 5vw;
     }
     
-    .hero-new h1 {
-        font-size: 3rem; 
-    }
-
+    .hero-new h1 { font-size: 3rem; }
+    
     .hero-image-halfcircle {
-        width: 60vw; 
-        height: 35vw;
-        right: -5vw; 
+        width: 60vw; height: 35vw; right: -5vw; 
     }
 }
 
-/* 2. 패드 세로 화면 (max-width: 900px) */
+/* 2. 패드 세로 화면 (max-width: 900px) - 우측 완벽 밀착 및 겹침 방지 */
 @media (max-width: 900px) {
     .hero-new {
+        position: relative; /* 💡 [핵심] 이미지 절대 위치의 확실한 기준점 역할 */
         display: flex;
         flex-direction: row; 
         align-items: center;
         justify-content: flex-start;
-        /* 💡 [여백 버그 해결] 위아래로 휑하게 남던 여백을 줄이기 위해 전체 높이 스트레칭(100vh)을 끄고 auto로 변경 */
         min-height: auto; 
-        padding: 120px 24px; /* 패드 세로 화면에 딱 적당하고 고급스러운 위아래 여백 부여 */
+        padding: 120px 24px; 
         overflow: hidden; 
     }
 
     .hero-content {
-        width: 50%; 
-        max-width: 320px; 
+        /* 글자 박스를 좁혀서 공간 확보 */
+        width: 45%; 
+        max-width: 300px; 
         margin-left: 4vw;
         z-index: 10;
     }
 
     .hero-new h1 {
-        font-size: 2.5rem; 
+        font-size: 2.4rem; 
         line-height: 1.3;
     }
 
@@ -1044,9 +1041,7 @@ footer {
         white-space: nowrap; 
     }
 
-    .hero-desc br {
-        display: none; 
-    }
+    .hero-desc br { display: none; }
     
     .hero-desc {
         font-size: 1.05rem;
@@ -1056,24 +1051,38 @@ footer {
 
     .hero-image-halfcircle {
         position: absolute;
-        width: 68vw; 
-        height: 40vw;
-        right: -10vw; 
+        /* 💡 겹침을 방지하기 위해 사진 폭을 살짝 줄이고 오른쪽으로 더 과감하게 뺌 */
+        width: 60vw; 
+        height: 36vw;
+        right: -15vw; 
         top: 50%;
         transform: translateY(-50%) rotate(-10deg);
         border-radius: 70% 30% 30% 70% / 70% 50% 50% 30%; 
     }
 }
 
-/* 3. 핸드폰 화면 (max-width: 480px) */
+/* 3. 모바일 기기 공통 (max-width: 768px) */
+@media (max-width: 768px) {
+    /* 💡 [나무 그래프 에러 해결] 고정된 420px 너비를 풀고, 화면 크기에 맞춰 100%로 쏙 들어가게 수정 */
+    .eco-tree-graphic-area {
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    .eco-tree-graphic-area svg {
+        width: 100%;
+        height: auto;
+    }
+}
+
+/* 4. 핸드폰 화면 (max-width: 480px) */
 @media (max-width: 480px) {
     .hero-new {
         min-height: auto;
-        padding: 80px 20px; /* 폰 환경에 맞춘 컴팩트한 위아래 여백 */
+        padding: 80px 20px; 
     }
 
     .hero-content {
-        /* 💡 폰에서는 글자 박스 가로폭을 100%로 넓히고 완벽한 가운데 정렬 */
         width: 100%; 
         max-width: none;
         margin-left: 0;
@@ -1081,19 +1090,19 @@ footer {
     }
 
     .hero-new h1 {
-        font-size: 2.2rem; /* 폰 화면에서 보기 좋은 시원한 타이틀 크기 */
-        justify-content: center; /* 타이틀 정중앙 정렬 */
+        font-size: 2.2rem; 
+        justify-content: center; 
         text-align: center;
     }
 
     .hero-desc {
         font-size: 1rem;
         line-height: 1.6;
-        padding-right: 0; /* 둥근 모양 맞춤 여백을 제거하여 중앙 밸런스 유지 */
+        padding-right: 0; 
         text-align: center;
     }
 
-    /* 💡 [폰 이미지 제거] 오직 핸드폰 화면에서만 물방울 이미지를 완전히 숨김 */
+    /* 폰 화면에서는 물방울 이미지를 숨김 */
     .hero-image-halfcircle {
         display: none !important;
     }
@@ -1103,7 +1112,6 @@ footer {
         font-size: 1.1rem;
     }
 
-    /* 하단 격자 카드 목록 1열 정렬 */
     .feature-grid, .top-cards {
         grid-template-columns: 1fr;
         gap: 16px;
