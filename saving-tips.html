@@ -177,14 +177,19 @@
                 gap: 24px;
             }
 
-            /* 모바일에서는 PC 느낌을 살려 예쁜 세로 물결선으로 변경 */
+          /* 모바일/태블릿에서는 구불거리는 선 대신 깔끔한 일자(직선) 바로 변경 */
         .roadmap-path {
             display: block; 
-            width: 60px; /* 물결이 칠 공간 */
-            /* CSS로 직접 그린 꼬불꼬불한 물결 S자 SVG (그림자 포함) */
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='120' viewBox='0 0 60 120'%3E%3Cpath d='M 30 0 Q 55 30 30 60 Q 5 90 30 120' fill='none' stroke='%23bbf7d0' stroke-width='16' stroke-linecap='round'/%3E%3Cpath d='M 30 0 Q 55 30 30 60 Q 5 90 30 120' fill='none' stroke='%234ade80' stroke-width='8' stroke-linecap='round'/%3E%3C/svg%3E");
-            background-repeat: repeat-y; /* 세로로 무한 반복 */
-            background-position: center top;
+            width: 8px; /* 선의 굵기 */
+            background-color: #4ade80; /* 중심 진한 초록선 */
+            /* 데스크톱 느낌의 연두색 외곽 테두리를 주어 밋밋하지 않고 입체감 있는 일자선을 만듭니다 */
+            box-shadow: 0 0 0 6px #bbf7d0; 
+            border-radius: 10px;
+        }
+
+        .roadmap-path svg {
+            display: none; /* 기존 PC용 구불구불한 SVG 이미지는 숨김 */
+        }
         }
 
         .roadmap-path svg {
