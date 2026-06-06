@@ -989,19 +989,18 @@ footer {
 }
 
 /* ===================================
-   우측 물방울 밀착 & 겹침 절대 방지 레이아웃 (최종본)
+   패드 여백 압축 & 폰 이미지 제거 및 중앙 정렬 (최종)
    =================================== */
 
-/* 전역 설정: 설명글 단어 찢어짐 방지 */
 .hero-desc {
     word-break: keep-all;
 }
 
-/* 1. 패드 가로 화면 대응 (max-width: 1400px) - 기존 좋은 상태 유지 */
+/* 1. 대형 패드 가로 화면 (max-width: 1400px) */
 @media (max-width: 1400px) {
     .hero-content {
         max-width: 45%; 
-        margin-left: 6vw;
+        margin-left: 5vw;
     }
     
     .hero-new h1 {
@@ -1009,42 +1008,40 @@ footer {
     }
 
     .hero-image-halfcircle {
-        width: 50vw; 
+        width: 60vw; 
         height: 35vw;
-        right: -2vw; 
-        top: 50%;
+        right: -5vw; 
     }
 }
 
-/* 2. 패드 세로 화면 대응 (max-width: 900px) - 제목 펼침, 우측 완벽 밀착, 겹침 차단 */
+/* 2. 패드 세로 화면 (max-width: 900px) */
 @media (max-width: 900px) {
     .hero-new {
         display: flex;
         flex-direction: row; 
         align-items: center;
         justify-content: flex-start;
-        min-height: calc(100vh - 32px);
-        padding: 40px 24px;
+        /* 💡 [여백 버그 해결] 위아래로 휑하게 남던 여백을 줄이기 위해 전체 높이 스트레칭(100vh)을 끄고 auto로 변경 */
+        min-height: auto; 
+        padding: 120px 24px; /* 패드 세로 화면에 딱 적당하고 고급스러운 위아래 여백 부여 */
+        overflow: hidden; 
     }
 
     .hero-content {
-        /* [겹침 차단] 좌측 공간을 딱 44%만 쓰도록 제한하여 우측 이미지 공간 침범을 원천 차단 */
-        width: 44%; 
-        max-width: 380px; 
+        width: 50%; 
+        max-width: 320px; 
         margin-left: 4vw;
         z-index: 10;
     }
 
     .hero-new h1 {
-        /* 패드 세로에서 불필요한 줄바꿈이 생기지 않도록 크기를 맞추고 넓게 펼침 */
-        font-size: 2.4rem; 
+        font-size: 2.5rem; 
         line-height: 1.3;
-        white-space: normal;
     }
 
     .title-word {
         display: inline-block;
-        white-space: nowrap; /* 단어가 중간에 찢어지는 것만 방지 */
+        white-space: nowrap; 
     }
 
     .hero-desc br {
@@ -1052,61 +1049,61 @@ footer {
     }
     
     .hero-desc {
-        font-size: 1.02rem;
+        font-size: 1.05rem;
         line-height: 1.7;
-        /* 이미지가 둥그런 모양이므로 글씨 우측에 부드러운 곡선형 마진 여백을 줌 */
         padding-right: 2vw; 
     }
 
-    /* [우측 밀착] 회전 각도를 계산하여 오른쪽 벽면에 물방울이 완벽하게 밀착되도록 배치 */
     .hero-image-halfcircle {
         position: absolute;
-        right: -2vw; 
+        width: 68vw; 
+        height: 40vw;
+        right: -10vw; 
         top: 50%;
         transform: translateY(-50%) rotate(-10deg);
-        /* 우측 공간을 48%만 사용 (좌측 44% + 우측 48% = 92%로 중간에 무조건 안전 공백 존재) */
-        width: 48vw; 
-        height: 36vw;
-        border-radius: 70% 30% 30% 70% / 70% 50% 50% 30%; /* 예쁜 물방울 모양 100% 보존 */
+        border-radius: 70% 30% 30% 70% / 70% 50% 50% 30%; 
     }
 }
 
-/* 3. 핸드폰 화면 대응 (max-width: 480px) - 폰 환경 우측 밀착 및 유격 확보 */
+/* 3. 핸드폰 화면 (max-width: 480px) */
 @media (max-width: 480px) {
+    .hero-new {
+        min-height: auto;
+        padding: 80px 20px; /* 폰 환경에 맞춘 컴팩트한 위아래 여백 */
+    }
+
     .hero-content {
-        /* 폰 화면 맞춤 분할 (좌측 46% 사용) */
-        width: 46%; 
-        margin-left: 3vw;
+        /* 💡 폰에서는 글자 박스 가로폭을 100%로 넓히고 완벽한 가운데 정렬 */
+        width: 100%; 
+        max-width: none;
+        margin-left: 0;
+        text-align: center;
     }
 
     .hero-new h1 {
-        font-size: 1.7rem; 
-        line-height: 1.3;
+        font-size: 2.2rem; /* 폰 화면에서 보기 좋은 시원한 타이틀 크기 */
+        justify-content: center; /* 타이틀 정중앙 정렬 */
+        text-align: center;
     }
 
     .hero-desc {
-        font-size: 0.88rem;
+        font-size: 1rem;
         line-height: 1.6;
-        padding-right: 1vw;
+        padding-right: 0; /* 둥근 모양 맞춤 여백을 제거하여 중앙 밸런스 유지 */
+        text-align: center;
     }
 
-    /* 폰 화면에서도 절대 겹치지 않게 크기를 줄이고 오른쪽 벽에 딱 밀착 */
+    /* 💡 [폰 이미지 제거] 오직 핸드폰 화면에서만 물방울 이미지를 완전히 숨김 */
     .hero-image-halfcircle {
-        position: absolute;
-        right: -3vw; 
-        top: 50%;
-        transform: translateY(-50%) rotate(-10deg);
-        width: 46vw; /* 우측 46% 사용 (46% + 46% = 92%로 절대 안 겹침) */
-        height: 38vw; 
-        border-radius: 70% 30% 30% 70% / 70% 50% 50% 30%;
+        display: none !important;
     }
-    
+
     .btn-primary {
         padding: 16px 20px;
         font-size: 1.1rem;
     }
 
-    /* 아래쪽 격자 카드들은 폰에서 보기 좋게 1열 세로 정렬 */
+    /* 하단 격자 카드 목록 1열 정렬 */
     .feature-grid, .top-cards {
         grid-template-columns: 1fr;
         gap: 16px;
