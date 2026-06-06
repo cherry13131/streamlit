@@ -1000,7 +1000,7 @@ footer {
 @media (max-width: 1400px) {
     .hero-content {
         max-width: 45%; 
-        margin-left: 5vw;
+        margin-left: 1vw;
     }
     
     .hero-new h1 { font-size: 3rem; }
@@ -1009,7 +1009,7 @@ footer {
         /* 💡 덜 잘려 보이도록 크기를 살짝 줄이고, 오른쪽 안전선 안쪽으로 완전히 밀어 넣음 */
         width: 50vw; 
         height: 31vw; 
-        right: -2vw; /* 마이너스 삭제! */
+        right: -2vw;
         top: 50%;
     }
 }
