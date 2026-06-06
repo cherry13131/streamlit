@@ -989,78 +989,84 @@ footer {
 }
 
 /* ===================================
-   모바일 반응형 추가 코드 (max-width: 768px)
+   태블릿(패드) 및 모바일(폰) 완벽 대응 코드로 교체
    =================================== */
+
+/* 1. 태블릿 (패드) 화면 대응 (가로 1024px 이하) */
+@media (max-width: 1024px) {
+    .hero-content {
+        /* 글씨가 오른쪽 이미지를 침범하지 못하도록 바리케이드(최대 너비) 설치 */
+        max-width: 480px; 
+        margin-left: 5vw;
+    }
+    
+    .hero-new h1 {
+        /* 패드 화면 공간에 맞춰 글자 크기를 부드럽게 축소 */
+        font-size: 3.4rem; 
+        line-height: 1.25;
+    }
+}
+
+/* 2. 모바일 (핸드폰) 화면 대응 (가로 768px 이하) */
 @media (max-width: 768px) {
-    /* 1. 히어로 섹션: 글씨와 이미지 겹침 방지 (세로 배치) */
     .hero-new {
         flex-direction: column;
         justify-content: center;
-        padding: 100px 20px 40px;
+        padding: 80px 20px 40px;
         min-height: auto;
     }
 
     .hero-content {
         margin-left: 0;
-        max-width: 100%;
-        text-align: center; /* 모바일에서는 텍스트 중앙 정렬이 깔끔합니다 */
+        max-width: 100%; /* 모바일에서는 가로폭을 꽉 채움 */
+        text-align: center;
     }
 
     .hero-new h1 {
-        font-size: 2.6rem; /* 모바일 화면에 맞게 폰트 축소 */
+        font-size: 2.4rem; /* 모바일 전용 타이틀 크기 */
         justify-content: center;
+        display: block; /* flex 정렬 꼬임 방지 */
+    }
+
+    /* 🔥 [핵심 고정] 자바스크립트로 쪼개진 단어가 한 글자씩 툭툭 떨어지는 현상 방지 */
+    .title-word {
+        display: inline-block;
+        white-space: nowrap; /* 단어 내부에서 절대 글자가 쪼개지지 않도록 통째로 고정 */
+        word-break: keep-all; /* 단어 단위 줄바꿈 보장 */
     }
 
     .hero-desc {
-        font-size: 1rem;
-        word-break: keep-all; /* 단어 단위로 줄바꿈되도록 설정 */
+        font-size: 0.95rem;
+        word-break: keep-all; /* 설명글도 단어 단위로 예쁘게 떨어지도록 설정 */
     }
 
-    /* 2. 히어로 이미지: 텍스트 아래로 이동 및 둥근 사각형으로 변경 */
+    /* 모바일 이미지 배치 최적화 */
     .hero-image-halfcircle {
         position: relative;
         right: auto;
         top: auto;
         width: 100%;
-        height: 250px;
-        transform: none; /* 데스크탑의 기울기/회전 효과 제거 */
+        height: 220px;
+        transform: none;
         border-radius: 24px;
-        margin-top: 32px;
+        margin-top: 24px;
     }
 
     .hero-image-halfcircle::before {
         transform: none;
-        top: 0; 
-        left: 0; 
-        width: 100%; 
-        height: 100%;
+        top: 0; left: 0; width: 100%; height: 100%;
     }
 
-    /* 3. 메인 버튼: 모바일 화면에 맞춰 과도한 높이(100px) 축소 */
+    /* 메인 실천 버튼 크기 최적화 */
     .btn-primary {
         height: auto;
-        padding: 16px 20px;
+        padding: 16px 24px;
         font-size: 1.15rem;
     }
 
-    /* 4. 카드 레이아웃: 칸이 너무 작아지지 않도록 1줄에 1개씩 안전하게 배치 */
-    .feature-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-    
-    /* 대시보드 상단 3개 요약 카드도 모바일에서는 세로로 넓게 배치 */
-    .top-cards {
+    /* 격자형 카드들을 모바일 화면에 맞춰 1열로 안전하게 정렬 */
+    .feature-grid, .top-cards {
         grid-template-columns: 1fr;
         gap: 16px;
-    }
-    
-    /* 5. 에코 트리 섹션 세부 조정 */
-    .eco-tree-layout {
-        padding: 30px 20px;
-    }
-    
-    .eco-tree-text-area {
-        width: 100%;
     }
 }
