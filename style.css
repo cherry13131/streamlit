@@ -989,91 +989,108 @@ footer {
 }
 
 /* ===================================
-   이미지 형태 보존 & 줄바꿈 완벽 해결 최종본
+   물방울 레이아웃 보존 & 세로 긴 줄바꿈 최적화 (최종본)
    =================================== */
 
-/* 데스크톱/태블릿 공통: 단어 중간에 글자가 찢어지지 않도록 강제 방어 */
+/* 전역 설정: 설명글이 단어 중간에서 찢어지지 않고 단어 단위로 깔끔하게 넘어가도록 설정 */
 .hero-desc {
     word-break: keep-all;
 }
 
-/* 1. 패드 가로 화면 대응 (1200px 이하) - 겹침 철벽 방어 */
+/* 1. 패드 가로 화면 대응 (max-width: 1200px) */
 @media (max-width: 1200px) {
     .hero-content {
-        max-width: 50%; /* 글씨가 화면 절반을 넘어 이미지와 겹치는 것을 원천 차단 */
-        margin-left: 5vw;
+        /* 글씨 가로 폭을 확 줄여서 줄넘김을 강제로 많이 시키고, 이미지와 겹치지 않게 세로로 길게 만듦 */
+        max-width: 380px; 
+        margin-left: 6vw;
     }
     
     .hero-new h1 {
-        font-size: 3.5rem; 
+        font-size: 3.2rem; 
+    }
+
+    .hero-image-halfcircle {
+        /* 원래의 예쁜 물방울 크기와 각도를 그대로 유지 */
+        width: 58vw; 
+        height: 36vw;
+        right: -4vw; 
     }
 }
 
-/* 2. 패드 세로 화면 & 핸드폰 대응 (900px 이하) */
+/* 2. 패드 세로 화면 및 핸드폰 완벽 대응 (max-width: 900px) */
 @media (max-width: 900px) {
     .hero-new {
-        flex-direction: column;
-        justify-content: center;
-        padding: 80px 20px 40px;
-        min-height: auto;
+        /* 사진을 밑으로 내리지 않고, 데스크톱처럼 우측 절대 배치 구조를 그대로 유지 */
+        display: flex;
+        flex-direction: row; 
+        align-items: center;
+        justify-content: flex-start;
+        min-height: calc(100vh - 32px);
+        padding: 40px 24px;
     }
 
     .hero-content {
-        margin-left: 0;
-        max-width: 100%; 
-        text-align: center;
+        /* 폰과 세로 패드의 좁은 화면에 맞춰 가로폭을 매우 슬림하게 제한 */
+        /* 이 덕분에 글씨가 꼬불꼬불 줄넘김이 많이 되어 세로로 길어지며 사진과 겹치지 않습니다 */
+        width: 45%;
+        max-width: 220px; 
+        margin-left: 4vw;
+        text-align: left; /* 왼쪽 정렬 감성 유지 */
+        z-index: 10;
     }
 
     .hero-new h1 {
-        font-size: 2.6rem; 
-        justify-content: center;
+        font-size: 2.2rem; 
+        line-height: 1.3;
+        display: flex;
+        justify-content: flex-start;
+        flex-wrap: wrap;
     }
 
-    /* 자바스크립트로 쪼개진 단어 통째로 고정 */
+    /* 자바스크립트로 쪼개진 타이틀 단어가 한 글자씩 끊겨서 떨어지는 현상 방지 */
     .title-word {
         display: inline-block;
         white-space: nowrap; 
     }
 
-    /* 🔥 핵심 1: HTML에 적힌 <br> 태그를 모바일에서는 무시! 
-       이상한 곳에서 강제로 줄이 바뀌는 현상을 싹 없애고 화면에 맞춰 단어 단위로 예쁘게 넘김 */
+    /* HTML에 박혀있던 <br> 태그를 모바일에서 무시하여 뚝뚝 끊기는 현상을 없애고, 
+       위의 슬림한 가로폭(width)에 맞춰 단어 단위로 예쁘게 줄바꿈이 일어나도록 유도 */
     .hero-desc br {
         display: none; 
     }
     
     .hero-desc {
-        font-size: 1.05rem;
-        padding: 0 10px;
+        font-size: 0.95rem;
+        line-height: 1.7;
     }
 
-    /* 🔥 핵심 2: 못생긴 네모 말고 원래의 예쁜 물방울 모양을 살림 */
+    /* 사진을 다시 위로 올리고 오른쪽 끝으로 완전히 치우치게 세팅 */
     .hero-image-halfcircle {
-        position: relative;
-        right: auto;
-        top: auto;
-        width: 80vw; /* 모바일에 꽉 차지 않게 적당한 크기 */
-        height: 60vw;
-        margin: 40px auto 0; /* 텍스트 아래에 가운데 정렬 */
-        /* 데스크톱의 둥근 물결 곡률 그대로 유지! */
+        position: absolute;
+        right: -15vw; /* 오른쪽 끝으로 바짝 밀어붙임 */
+        top: 55%;
+        transform: translateY(-50%) rotate(-10deg); /* 원래의 예쁜 사선 각도 유지 */
+        width: 75vw; /* 좁은 화면에서도 볼륨감 있게 우측에 걸치도록 설정 */
+        height: 45vw;
+        margin-top: 0;
+        /* 원본의 비대칭 조약돌/물방울 곡률 100% 보존 */
         border-radius: 70% 30% 30% 70% / 70% 50% 50% 30%; 
-        transform: rotate(-10deg); /* 살짝 기울어진 엣지 유지 */
     }
 
-    /* 안쪽 이미지가 찌그러지지 않게 똑바로 펴주기 */
     .hero-image-halfcircle::before {
         top: -15%; left: -15%; 
         width: 120%; height: 130%;
-        transform: rotate(10deg); 
+        transform: rotate(10deg); /* 이미지 회전 보정 */
     }
 
-    /* 모바일 버튼 크기 조절 */
+    /* 하단 실천 버튼 및 카드 레이아웃 최적화 */
     .btn-primary {
         height: auto;
         padding: 16px 24px;
         font-size: 1.15rem;
     }
 
-    /* 아래쪽 카드 1줄 정렬 */
+    /* 아래쪽 격자 카드들은 칸이 너무 작아지지 않게 1열 세로 정렬 */
     .feature-grid, .top-cards {
         grid-template-columns: 1fr;
         gap: 16px;
