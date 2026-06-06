@@ -1000,7 +1000,7 @@ footer {
 @media (max-width: 1400px) {
     .hero-content {
         max-width: 45%; 
-        margin-left: 1vw;
+        margin-left: 5vw;
     }
     
     .hero-new h1 { font-size: 3rem; }
