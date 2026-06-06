@@ -53,28 +53,7 @@
             </div>
         </section>
 
-        <section class="analysis-section">
-            <div class="progress-wrapper">
-                <div class="progress-card">
-                    <div class="progress-title">전기</div>
-                    <div class="circle blue">
-                        <span>78%</span>
-                    </div>
-                </div>
-                <div class="progress-card">
-                    <div class="progress-title">수도</div>
-                    <div class="circle green">
-                        <span>91%</span>
-                    </div>
-                </div>
-                <div class="progress-card">
-                    <div class="progress-title">가스</div>
-                    <div class="circle orange">
-                        <span>85%</span>
-                    </div>
-                </div>
-            </div>
-        </section>
+
 
         <div class="action-area">
             <button class="btn-primary" onclick="location.href='saving-tips.html'">
@@ -164,7 +143,7 @@
                     const d = `M-${380 - idx * 5 * position} -${189 + idx * 6}C-${380 - idx * 5 * position} -${189 + idx * 6} -${312 - idx * 5 * position} ${216 - idx * 6} ${152 - idx * 5 * position} ${343 - idx * 6}C${616 - idx * 5 * position} ${470 - idx * 6} ${684 - idx * 5 * position} ${875 - idx * 6} ${684 - idx * 5 * position} ${875 - idx * 6}`;
                     
                     path.setAttribute("d", d);
-                    path.setAttribute("stroke", "currentColor");
+                    path.setAttribute("stroke", "#166534");
                     path.setAttribute("stroke-width", 0.5 + idx * 0.03);
                     path.setAttribute("stroke-opacity", 0.02 + Math.pow((24 - i) / 24, 2) * 0.35);
                     svg.appendChild(path);

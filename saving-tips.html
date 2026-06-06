@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>절약 방법 로드맵 - 학교 자원 모니터링</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 로드맵 타임라인 전용 CSS */
+        .roadmap-page {
+            background-color: #f8fafc;
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        .roadmap-header {
+            text-align: center;
+            padding: 60px 24px 40px;
+        }
+        
+        .roadmap-header h1 {
+            font-size: 2.5rem;
+            color: #166534;
+            font-weight: 800;
+            margin-bottom: 16px;
+        }
+
+        .roadmap-header p {
+            font-size: 1.1rem;
+            color: #475569;
+        }
+
+        .roadmap-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+            padding: 40px 0;
+            overflow: hidden;
+        }
+
+        /* 중앙을 가로지르는 구불구불한 선 */
+        .roadmap-path {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        .roadmap-path svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        /* 로드맵 아이템 */
+        .roadmap-item {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 120px;
+            gap: 40px;
+            opacity: 0;
+            transform: translateY(40px);
+            animation: fadeUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        .roadmap-item:nth-child(2) { animation-delay: 0.2s; }
+        .roadmap-item:nth-child(3) { animation-delay: 0.4s; }
+        .roadmap-item:nth-child(4) { animation-delay: 0.6s; margin-bottom: 0; }
+
+        @keyframes fadeUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .roadmap-item.left {
+            flex-direction: row-reverse;
+        }
+
+        /* 픽토그램 (일러스트) 영역 */
+        .roadmap-illustration {
+            flex: 0 0 300px;
+            width: 300px;
+            height: 300px;
+            background: #ffffff;
+            border-radius: 50%;
+            box-shadow: 0 20px 40px rgba(22, 101, 52, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            position: relative;
+            border: 8px solid #ffffff;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .roadmap-illustration:hover {
+            transform: scale(1.05) rotate(-2deg);
+        }
+
+        .roadmap-illustration svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* 텍스트 콘텐츠 영역 */
+        .roadmap-content {
+            flex: 0 0 450px;
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+            position: relative;
+            border-left: 6px solid #4ade80;
+        }
+
+        .roadmap-item.left .roadmap-content {
+            border-left: none;
+            border-right: 6px solid #4ade80;
+            text-align: right;
+        }
+
+        .roadmap-content h2 {
+            font-size: 1.8rem;
+            color: #1e293b;
+            margin-bottom: 16px;
+            font-weight: 800;
+        }
+
+        .roadmap-content h2 span {
+            display: inline-block;
+            background: #ecfdf5;
+            color: #059669;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 1rem;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .roadmap-content p {
+            font-size: 1.1rem;
+            color: #64748b;
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+
+        .roadmap-tips {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            text-align: left;
+        }
+
+        .roadmap-tips li {
+            position: relative;
+            padding-left: 28px;
+            margin-bottom: 12px;
+            color: #334155;
+            font-weight: 500;
+        }
+
+        .roadmap-item.left .roadmap-tips li {
+            padding-left: 0;
+            padding-right: 28px;
+            text-align: right;
+        }
+
+        .roadmap-tips li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            top: 2px;
+            color: #10b981;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .roadmap-item.left .roadmap-tips li::before {
+            left: auto;
+            right: 0;
+        }
+
+        /* 반응형 디자인 */
+        @media (max-width: 900px) {
+            .roadmap-item, .roadmap-item.left {
+                flex-direction: column;
+                text-align: center;
+                gap: 24px;
+            }
+
+            .roadmap-path {
+                display: none; /* 모바일에서는 선 숨김 */
+            }
+
+            .roadmap-content, .roadmap-item.left .roadmap-content {
+                flex: auto;
+                width: 100%;
+                border: none;
+                border-top: 6px solid #4ade80;
+                text-align: center;
+            }
+
+            .roadmap-tips li {
+                padding: 0 !important;
+                text-align: center !important;
+            }
+            .roadmap-tips li::before {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body class="roadmap-page">
+
+    <div class="page-header" style="max-width: 1200px; margin: 0 auto; padding: 24px;">
+        <a href="index.html" class="back-btn">← 메인 대시보드로</a>
+    </div>
+
+    <div class="roadmap-header">
+        <h1>🌱 자원 절약, 씨앗에서 다시 숲으로</h1>
+        <p>우리 학교의 작은 실천이 모여 큰 숲을 만듭니다. 구불구불한 길을 따라 절약 방법을 알아보세요.</p>
+    </div>
+
+    <div class="roadmap-container">
+        
+        <!-- 중앙 구불구불한 녹색 선 (ㄹ자 모양) -->
+        <div class="roadmap-path">
+            <svg viewBox="0 0 1000 1200" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- 그림자 효과 -->
+                <path d="M 150,0 L 150,150 Q 150,250 250,250 L 750,250 Q 850,250 850,350 L 850,550 Q 850,650 750,650 L 250,650 Q 150,650 150,750 L 150,950 Q 150,1050 250,1050 L 750,1050 Q 850,1050 850,1150 L 850,1200" 
+                      fill="none" stroke="#bbf7d0" stroke-width="24" stroke-linecap="round" />
+                <!-- 메인 녹색 선 -->
+                <path d="M 150,0 L 150,150 Q 150,250 250,250 L 750,250 Q 850,250 850,350 L 850,550 Q 850,650 750,650 L 250,650 Q 150,650 150,750 L 150,950 Q 150,1050 250,1050 L 750,1050 Q 850,1050 850,1150 L 850,1200" 
+                      fill="none" stroke="#4ade80" stroke-width="12" stroke-linecap="round" stroke-dasharray="24 12" />
+            </svg>
+        </div>
+
+        <!-- 1. 전기 절약 -->
+        <div class="roadmap-item right">
+            <div class="roadmap-illustration">
+                <!-- 번개 + 전기 발전소 일러스트 (플랫 스타일) -->
+                <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="100" cy="100" r="90" fill="#fef3c7" /> <!-- 배경 노란색 -->
+                    <!-- 구름 -->
+                    <path d="M 40,60 Q 40,45 55,45 Q 65,30 80,40 Q 90,30 100,45 Q 115,45 115,60 Z" fill="#ffffff" opacity="0.8" />
+                    <!-- 발전소 건물 (왼쪽으로 이동) -->
+                    <g transform="translate(-15, 0)">
+                        <rect x="40" y="100" width="60" height="60" rx="6" fill="#bae6fd" />
+                        <rect x="105" y="120" width="55" height="40" rx="6" fill="#7dd3fc" />
+                        <!-- 굴뚝 -->
+                        <path d="M 50,100 L 55,70 L 65,70 L 70,100 Z" fill="#94a3b8" />
+                        <path d="M 80,100 L 85,60 L 95,60 L 100,100 Z" fill="#cbd5e1" />
+                        <circle cx="60" cy="60" r="8" fill="#e2e8f0" opacity="0.7" />
+                        <circle cx="90" cy="45" r="10" fill="#e2e8f0" opacity="0.7" />
+                        <circle cx="85" cy="30" r="12" fill="#e2e8f0" opacity="0.5" />
+                    </g>
+                    <!-- 번개 기호 (오른쪽 위로 이동) -->
+                    <g transform="translate(15, -10)">
+                        <path d="M 140,50 L 110,110 L 135,110 L 125,160 L 165,95 L 140,95 Z" fill="#facc15" stroke="#ffffff" stroke-width="4" stroke-linejoin="round" />
+                    </g>
+                    <!-- 나무 장식 -->
+                    <path d="M 25,160 C 15,160 15,140 25,130 C 35,120 45,140 45,160 Z" fill="#86efac" />
+                </svg>
+            </div>
+            <div class="roadmap-content">
+                <h2><span style="background:#fffbeb;color:#d97706">STEP 1</span><br>전기 에너지 다이어트</h2>
+                <p>학교에서 소비되는 가장 큰 에너지, 바로 전기입니다. 무심코 켜둔 전등과 컴퓨터 전원만 꺼도 큰 변화를 만들 수 있습니다.</p>
+                <ul class="roadmap-tips">
+                    <li>교실 이동 수업 시 반드시 소등하기</li>
+                    <li>사용하지 않는 컴퓨터, 프로젝터 전원 끄기</li>
+                    <li>복도, 화장실 등 공용 공간의 불필요한 조명 끄기</li>
+                    <li>여름/겨울철 적정 실내 온도(26℃/20℃) 유지하기</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 2. 수도 절약 -->
+        <div class="roadmap-item left">
+            <div class="roadmap-illustration">
+                <!-- 수도꼭지 + 수력 발전 일러스트 (플랫 스타일) -->
+                <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="100" cy="100" r="90" fill="#e0f2fe" /> <!-- 배경 하늘색 -->
+                    <!-- 댐/물결 -->
+                    <path d="M 10,140 Q 55,110 100,140 T 190,140 L 190,190 Q 145,170 100,190 T 10,190 Z" fill="#38bdf8" />
+                    <path d="M 10,160 Q 55,130 100,160 T 190,160 L 190,190 Q 145,180 100,190 T 10,190 Z" fill="#0284c7" opacity="0.6" />
+                    <!-- 댐 구조물 (오른쪽 아래로 이동) -->
+                    <g transform="translate(15, 20)">
+                        <path d="M 60,150 L 70,80 L 130,80 L 140,150 Z" fill="#cbd5e1" />
+                        <rect x="85" y="80" width="30" height="70" fill="#94a3b8" />
+                    </g>
+                    <!-- 수도꼭지와 물방울 (왼쪽 위로 이동) -->
+                    <g transform="translate(-15, -20) scale(0.9)">
+                        <path d="M 140,50 L 60,50 C 45,50 45,70 60,70 L 110,70 L 110,90 L 130,90 L 130,70 L 140,70 Z" fill="#f1f5f9" stroke="#94a3b8" stroke-width="4" />
+                        <!-- 물방울 -->
+                        <path d="M 120,100 C 130,115 130,130 120,130 C 110,130 110,115 120,100 Z" fill="#bae6fd" />
+                        <path d="M 40,80 C 45,90 45,100 40,100 C 35,100 35,90 40,80 Z" fill="#bae6fd" opacity="0.8" />
+                    </g>
+                    <!-- 나뭇잎 장식 -->
+                    <path d="M 160,50 Q 175,35 180,50 Q 165,65 160,50 Z" fill="#4ade80" />
+                </svg>
+            </div>
+            <div class="roadmap-content">
+                <h2><span style="background:#f0f9ff;color:#0284c7">STEP 2</span><br>소중한 물방울 지키기</h2>
+                <p>우리가 매일 쓰는 물도 에너지를 소모하여 정수됩니다. 물을 아끼는 것은 수자원 보호와 탄소 배출 감소로 이어집니다.</p>
+                <ul class="roadmap-tips">
+                    <li>양치할 때 개인 컵 사용하기 (1회 약 2L 절약)</li>
+                    <li>손에 비누칠을 할 때는 수도꼭지 잠그기</li>
+                    <li>물이 새는 화장실이나 세면대 발견 시 즉시 알리기</li>
+                    <li>남은 물은 화단의 식물에게 양보하기</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 3. 가스 절약 -->
+        <div class="roadmap-item right">
+            <div class="roadmap-illustration">
+                <!-- 보일러 + 석유통 일러스트 (플랫 스타일) -->
+                <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="100" cy="100" r="90" fill="#ffedd5" /> <!-- 배경 연주황색 -->
+                    <!-- 바닥 그림자 -->
+                    <ellipse cx="100" cy="165" rx="60" ry="10" fill="#fdba74" opacity="0.3" />
+                    <!-- 드럼통 (석유통) (왼쪽으로 이동) -->
+                    <g transform="translate(-15, 0)">
+                        <rect x="35" y="80" width="50" height="75" rx="6" fill="#94a3b8" />
+                        <rect x="30" y="90" width="60" height="8" fill="#64748b" />
+                        <rect x="30" y="130" width="60" height="8" fill="#64748b" />
+                        <circle cx="50" cy="80" r="6" fill="#475569" />
+                        <path d="M 60,110 L 60,120 L 50,115 Z" fill="#fbbf24" /> <!-- 위험 마크 -->
+                    </g>
+                    <!-- 보일러 (오른쪽으로 이동) -->
+                    <g transform="translate(15, 0)">
+                        <rect x="100" y="50" width="65" height="105" rx="12" fill="#f8fafc" stroke="#cbd5e1" stroke-width="4" />
+                        <circle cx="132" cy="80" r="16" fill="#cbd5e1" />
+                        <path d="M 132,70 L 138,85 L 126,85 Z" fill="#3b82f6" /> <!-- 온도계 바늘 -->
+                        <!-- 불꽃 모양 (가스) -->
+                        <path d="M 132,105 Q 150,130 132,145 Q 114,130 132,105 Z" fill="#fca5a5" />
+                        <path d="M 132,115 Q 142,130 132,140 Q 122,130 132,115 Z" fill="#fbbf24" />
+                        <!-- 파이프 -->
+                        <path d="M 115,50 L 115,30 L 160,30 L 160,50" fill="none" stroke="#64748b" stroke-width="8" stroke-linejoin="round" />
+                        <!-- 빛나는 효과 -->
+                        <circle cx="160" cy="40" r="4" fill="#ffffff" />
+                    </g>
+                </svg>
+            </div>
+            <div class="roadmap-content">
+                <h2><span style="background:#fff7ed;color:#ea580c">STEP 3</span><br>난방과 가스 알뜰 사용</h2>
+                <p>화석 연료 사용은 탄소 배출의 주범입니다. 체감 온도를 높이는 작은 습관으로 보일러 가동을 줄일 수 있습니다.</p>
+                <ul class="roadmap-tips">
+                    <li>겨울철 내복이나 덧옷 입기로 체감온도 3℃ 높이기</li>
+                    <li>난방기 가동 시 창문과 문을 꼭 닫아 열 손실 막기</li>
+                    <li>쉬는 시간 주기적인 환기로 공기 순환 효율 높이기</li>
+                    <li>불필요한 온수 낭비 줄이기</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
