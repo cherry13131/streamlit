@@ -798,8 +798,8 @@ body {
 footer {
     background-color: #1a2332;
     color: rgba(255, 255, 255, 0.6);
-    text-align: center;
-    padding: 24px;
+    text-align: left;
+    padding: 18px;
     font-size: 13px;
 }
 
